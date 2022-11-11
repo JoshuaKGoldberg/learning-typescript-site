@@ -52,6 +52,9 @@ vibe.mood;
 But, this has a flaw too!
 As developers reading the code, we know `vibe.mood` should be the more specific ("narrow") `"happy"`, not the more general ("wide") `"happy" | "sad"`.
 
+> [`as const` type assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) can also be used to modify types.
+> But those add `readonly` to all array and object types, which also might not be desired.
+
 ## `satisfies` to the Rescue
 
 TypeScript 4.9's new `satisfies` operator introduces a happy compromise between `:` annotations and and default type inference.
