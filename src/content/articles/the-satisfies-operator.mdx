@@ -99,10 +99,10 @@ Its [data fetching patterns](https://nextjs.org/docs/basic-features/data-fetchin
 
 A simplified version of the `GetServerSideProps` type might look like:
 
-```ts
+```ts twoslash
 export type GetServerSideProps<Props> = (
   context: GetServerSidePropsContext
-) => ServerSidePropsResult<Props>;
+) => Promise<GetServerSidePropsResult<Props>>;
 
 export interface GetServerSidePropsContext {
   query: Record<string, string>;
@@ -117,20 +117,20 @@ Before `satisfies`, there was no good way to declare many generic `getServerSide
 
 Code could use an explicit generic `: GetServerSideProps<...>` type annotation, but then that would need to be explicitly told a function type parameter for the generic `Props` type argument:
 
-```ts
+```ts twoslash
 import { GetServerSideProps } from "next";
 
 export interface MyPageData {
+  locale: string | undefined;
   rating: number;
-  referrer: string | undefined;
 }
 
-export const getServerSideProps: GetServerSideProps<MyPageData> = (
+export const getServerSideProps: GetServerSideProps<MyPageData> = async (
   context
 ) => ({
   props: {
+    locale: context.locale,
     rating: Math.random(),
-    referrer: context.query.referrer,
   },
 });
 ```
@@ -143,8 +143,8 @@ Even if `context` were to be removed or given a proper `: ServerSidePropsContext
 import { GetServerSidePropsContext } from "next";
 
 export const getServerSideProps = (context: GetServerSidePropsContext) => ({
+  locale: context.locale,
   rating: Math.random(),
-  referrer: context.query.referrer,
 });
 // No error, even though this is returning the wrong object type shape
 // (it should have wrapped its props in a `props` property)
@@ -163,8 +163,8 @@ import { GetServerSideProps } from "next";
 export const getServerSideProps = (async (context) => {
   return {
     props: {
+      locale: context.locale,
       rating: Math.random(),
-      referrer: context.query.referrer,
     },
   };
 }) satisfies GetServerSideProps;
@@ -189,7 +189,7 @@ npm i typescript@4.9-beta --save-dev
 
 You can also try out the latest ("nightly") version of TypeScript in your browser on [typescriptlang.org/play?ts=next](https://www.typescriptlang.org/play?ts=next).
 
-> [Here's a TypeScript playground with the Next.js `GetServerSideProps` example](https://www.typescriptlang.org/play?ts=5.0.0-dev.20221114#code/JYWwDg9gTgLgBAbzgcQKYwMqqgN2x4AE1QAUoIwBnOAXzgDNyQ4AiAO1QA8YWBuAKH5dIsOAGMIbSvADm6LLnxFS5KnAC8cABQBDSgE82Y7RLYwuMAJQaAfIn5w4UdAFcobe48dhVlAFyeXo5QOjDAbDIBALKhABYAdCFshBAgWpYANA5BTqj02M5QAabm3PEAji7Y+ol5BdhZQTSNtAI01pShwJT0wKjUaJjYeFAExGQUlAL8ckOKo8oTVAIA9CtwAHoA-EA).
+> [Here's a TypeScript playground with the Next.js `GetServerSideProps` example](https://www.typescriptlang.org/play?ts=5.0.0-dev.20221114#code/JYWwDg9gTgLgBAbzgcQKYwMqqgN2x4AE1QAUoIwBnOAXzgDNyQ4AiAO1QA8YWBuAKH5dIsOAGMIbSvADm6LLnxFS5KnAC8cABQBDSgE82Y7RLYwuMAJQaAfIn5w4UdAFcobe48dhVlAFyeXo4ANhBiOsGoAabm3AB0oeGRADQOQU46MMBsMgEAspkAFnFQOmyEECBalqlBNLW0AjTWlJnAlPTAqNRomNh4UATEZBSUAvxyfYqDyiNUAgD0C3AAegD8QA).
 
 ## _Learning TypeScript_ and `satisfies`
 
