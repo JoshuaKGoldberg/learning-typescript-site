@@ -58,7 +58,13 @@ As developers reading the code, we know `vibe.mood` should be the more specific 
 
 ## `satisfies` to the Rescue
 
-TypeScript 4.9 introduces a new `satisfies` operator that acts as a happy compromise between `:` annotations and the default type inference.
+TypeScript 4.9's new `satisfies` operator introduces a happy compromise between `:` annotations and the default type inference.
+The syntax for `satisfies` is to place it after a value and before a name of a type:
+
+```ts
+someValue satisfies SomeType;
+```
+
 `satisfies` applies the best of both worlds:
 
 - The value must adhere to a specific shape (as with `:` declarations )
